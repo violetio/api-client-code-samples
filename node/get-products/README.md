@@ -1,6 +1,6 @@
 # login
 
-Login sample.
+Get products sample.
 
 ## Setup
 
@@ -13,9 +13,8 @@ npm install
 ```
 APP_ID=[APP ID] \
 APP_SECRET=[APP SECRET] \
+TOKEN=[TOKEN] \
 BASE_URL=[BASE URL] \
-EMAIL=[EMAIL] \
-PASSWORD=[PASSWORD] \
 node index.js
 ```
 
@@ -24,8 +23,7 @@ node index.js
 ```
 APP_ID=[YOUR APP ID FROM MYVIOLET] \
 APP_SECRET=[YOUR APP SECRET FROM MYVIOLET] \
-BASE_URL=https://sandbox-api.violet.io/v1 \
-EMAIL=[YOUR EMAIL] \
-PASSWORD=[YOUR PASSWORD] \
+TOKEN=[YOUR AUTHENTICATED TOKEN] \
+BASE_URL=https://sandbox-api.violet.io/v1
 node index.js
 ```
