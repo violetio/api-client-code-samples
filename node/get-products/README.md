@@ -1,4 +1,4 @@
-# login
+# get-products
 
 Get products sample.
 
