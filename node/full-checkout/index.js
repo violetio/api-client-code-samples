@@ -39,19 +39,23 @@ const performFullCheckout = async (token, appId, appSecret, skus, base_url, emai
     // Add skus to cart
     console.log(`Adding skus to cart: ${skus}`);
 
-    skus.split(',').forEach(async (theSku) => {
-      await sleep(2000);
+    skus = skus.split(',');
+    for(var i = 0; i < skus.length; i++) {
+      theSku = skus[i];
+      console.log("Adding sku to cart:", theSku);
 
-      // Add Sku To Cart
+      // # Add sku To Cart
       var addSkuToCartResp = await axios({
         method: 'post',
         url: `${base_url}/checkout/cart/${cartId}/skus?price_cart=false`,
         headers: headers,
         data : JSON.stringify({"sku_id":theSku})
       });
-    });
 
-    console.log(`Added skus to cart`);
+      console.log("Added sku to cart: ", theSku);
+    }
+
+    console.log(`Added skus to cart.`);
     
     await sleep(2000);
 
@@ -65,6 +69,8 @@ const performFullCheckout = async (token, appId, appSecret, skus, base_url, emai
       data : JSON.stringify({"first_name":firstName,"last_name":lastName,"email":email})
     });
 
+    console.log(`Added customer to cart`);
+
     await sleep(2000);
 
     // Set Shipping Address
@@ -76,6 +82,8 @@ const performFullCheckout = async (token, appId, appSecret, skus, base_url, emai
       headers: headers,
       data : JSON.stringify(shippingAddress)
     });
+
+    console.log(`Set shipping address`);
 
     await sleep(2000);
 
@@ -89,6 +97,8 @@ const performFullCheckout = async (token, appId, appSecret, skus, base_url, emai
       data : JSON.stringify(billingAddress)
     });
 
+    console.log(`Set billing address`);
+
     await sleep(2000);
 
     // Get Available Shipping Methods
@@ -99,6 +109,8 @@ const performFullCheckout = async (token, appId, appSecret, skus, base_url, emai
       url: `${base_url}/checkout/cart/${cartId}/shipping/available`,
       headers: headers
     });
+
+    console.log(`Got available shipping methods`);
 
     await sleep(2000);
 
@@ -112,6 +124,8 @@ const performFullCheckout = async (token, appId, appSecret, skus, base_url, emai
       data : JSON.stringify(getAvailableShippingMethodsForCartResp.data.map((avl, idx) => [avl.shipping_methods[0]]).flat())
     });
 
+    console.log(`Applied shipping method`);
+
     await sleep(2000);
 
     // Apply Payment Method
@@ -124,6 +138,8 @@ const performFullCheckout = async (token, appId, appSecret, skus, base_url, emai
       data : JSON.stringify({"card_number":"4242424242424242","card_cvc":987,"card_exp_month":12,"card_exp_year":22}) /*JSON.stringify({"token":token})*/
     });
 
+    console.log(`Applied payment method`);
+
     await sleep(2000);
 
     // Submit Cart
@@ -134,6 +150,8 @@ const performFullCheckout = async (token, appId, appSecret, skus, base_url, emai
       url: `${base_url}/checkout/cart/${cartId}/submit`,
       headers: headers
     });
+
+    console.log(`Submitted cart`);
 
     return cartId;
   } catch (err) {
