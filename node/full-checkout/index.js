@@ -16,6 +16,7 @@ const performFullCheckout = async (token, appId, appSecret, skus, base_url, emai
   }
 
   var firstName = faker.name.firstName();
+  var lastName = faker.name.lastName();
 
   var getAddress = (type) => {
     return {"address_1":"123 Main St NEWS","city":"Seattle","country":"US","postal_code":"98121","state":"WA","type":type,"name":`${firstName} ${lastName}`,"phone":"202-555-0125","address_2":""};
