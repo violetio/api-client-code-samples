@@ -4,10 +4,25 @@ var qs = require('qs');
 
 const sleep = (milliseconds=500) => new Promise(resolve => setTimeout(resolve, milliseconds));
 
-const performFullCheckout = async (token, appId, appSecret, skus, base_url, email) => {
+const performFullCheckout = async (token, refreshToken, appId, appSecret, skus, base_url, email) => {
   var startDate = new Date();
   console.log(`Starting full checkout - ${startDate}`)
-  
+
+  if(refreshToken) {
+    console.log("Acquiring token")
+    var refreshTokenResp = await axios({
+      method: 'get',
+      url: `${base_url}/auth/token`,
+      headers: { 
+        'X-Violet-Token': refreshToken,
+        'X-Violet-App-Secret': appSecret,
+        'X-Violet-App-Id': appId,
+        'Content-Type': 'application/json'
+      }
+    });
+    token = refreshTokenResp.data.token;
+  }
+
   var headers = { 
     'X-Violet-Token': token,
     'X-Violet-App-Secret': appSecret,
@@ -215,4 +230,4 @@ const getPaymentToken = async () => {
   return await axios(config);
 }
 
-performFullCheckout(process.env.TOKEN, process.env.APP_ID, process.env.APP_SECRET, process.env.SKUS, process.env.BASE_URL, process.env.EMAIL);
+performFullCheckout(process.env.TOKEN, process.env.REFRESH_TOKEN, process.env.APP_ID, process.env.APP_SECRET, process.env.SKUS, process.env.BASE_URL, process.env.EMAIL);
