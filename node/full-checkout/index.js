@@ -1,6 +1,7 @@
 var axios = require('axios');
 const faker = require('faker');
 var qs = require('qs');
+const uuid = require('uuid');
 
 const sleep = (milliseconds=500) => new Promise(resolve => setTimeout(resolve, milliseconds));
 
@@ -54,15 +55,16 @@ const performFullCheckout = async (token, refreshToken, appId, appSecret, skus, 
     var emailSplit = email.split(`@`);
     var skus = skus.split(',');
     // # Create Cart
+    var appOrderId = uuid.v4();
     var createCartResp = await axios({
       method: 'post',
-      url: `${base_url}/checkout/cart?app_order_id=1&base_currency=USD&referral_id=123`,
+      url: `${base_url}/checkout/cart?app_order_id=${appOrderId}&base_currency=USD&referral_id=123`,
       headers: headers,
       data: (() => {
         if(walletBased){
           return JSON.stringify({"wallet_based_checkout": true, "skus": skus.map((theSku) => {return {"sku_id":theSku, "quantity":1}})});
         } else {
-          return JSON.stringify({"wallet_based_checkout": true, "skus": skus.map((theSku) => {return {"sku_id":theSku, "quantity":1}}), "customer": {"first_name":firstName,"last_name":lastName,"email":emailSplit[0] + "+cart" + cartId + "@" + emailSplit[1], "shipping_address": getAddress("SHIPPING"), "billing_address":getAddress("BILLING")}});
+          return JSON.stringify({"wallet_based_checkout": true, "skus": skus.map((theSku) => {return {"sku_id":theSku, "quantity":1}}), "customer": {"first_name":firstName,"last_name":lastName,"email":emailSplit[0] + "+cart" + appOrderId + "@" + emailSplit[1], "shipping_address": getAddress("SHIPPING"), "billing_address":getAddress("BILLING")}});
         }
       })()
     });
