@@ -64,7 +64,7 @@ const performFullCheckout = async (token, refreshToken, appId, appSecret, skus, 
         if(walletBased){
           return JSON.stringify({"wallet_based_checkout": true, "skus": skus.map((theSku) => {return {"sku_id":theSku, "quantity":1}})});
         } else {
-          return JSON.stringify({"wallet_based_checkout": true, "skus": skus.map((theSku) => {return {"sku_id":theSku, "quantity":1}}), "customer": {"first_name":firstName,"last_name":lastName,"email":emailSplit[0] + "+cart" + appOrderId + "@" + emailSplit[1], "shipping_address": getAddress("SHIPPING"), "billing_address":getAddress("BILLING")}});
+          return JSON.stringify({"wallet_based_checkout": false, "skus": skus.map((theSku) => {return {"sku_id":theSku, "quantity":1}}), "customer": {"first_name":firstName,"last_name":lastName,"email":emailSplit[0] + "+cart" + appOrderId + "@" + emailSplit[1], "shipping_address": getAddress("SHIPPING"), "billing_address":getAddress("BILLING")}});
         }
       })()
     });
@@ -261,7 +261,8 @@ const performFullCheckout = async (token, refreshToken, appId, appSecret, skus, 
     var submitCartResp = await axios({
       method: 'post',
       url: `${base_url}/checkout/cart/${cartId}/submit`,
-      headers: headers
+      headers: headers,
+      data : JSON.stringify({})
     });
 
     console.log(`Submitted cart. (${(new Date().getTime() - tempDate.getTime()) / 1000} secs)`);
